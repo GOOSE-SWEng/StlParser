@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class StlParser2 {
 	
 	
-	public File cube = new File("src/toothed_pulley_2.stl");
+	public File cube = new File("src/space_invader_magnet.stl");
 	public ArrayList<Facet> facets =  new ArrayList<>();
 	public int facetCount = 0;
 	public int vertexCount = 0;
@@ -41,23 +41,24 @@ public class StlParser2 {
 		while(line !=  null) {
 			if(line.contains("facet normal")) {
 				facetCount++;
-				String[] normal = line.split(" ");
+				String[] normal = line.trim().split("\\s+");
 				//System.out.println("NORMALS: " + normal[4] + "," + normal[5] + "," + normal[6]);
-				facetNormal = new CartesianCoordinate(Double.valueOf(normal[4]),Double.valueOf(normal[5]) , Double.valueOf(normal[6]));
+
+				facetNormal = new CartesianCoordinate(Double.valueOf(normal[2]),Double.valueOf(normal[3]) , Double.valueOf(normal[4]));
 				//System.out.println("FACET NORMAL STORED");
 
 				
 			} else if(line.contains("vertex")) {
-				String[] vertex = line.split(" ");
-				
+				String[] vertex = line.trim().split("\\s+");
+
 				if(vertexCount == 0) {
-					vertex1 = new CartesianCoordinate(Double.valueOf(vertex[9]), Double.valueOf(vertex[10]), Double.valueOf(vertex[11]));
+					vertex1 = new CartesianCoordinate(Double.valueOf(vertex[1]), Double.valueOf(vertex[2]), Double.valueOf(vertex[3]));
 					vertexCount++;
 				}else if(vertexCount == 1) {
-					vertex2 = new CartesianCoordinate(Double.valueOf(vertex[9]), Double.valueOf(vertex[10]), Double.valueOf(vertex[11]));
+					vertex2 = new CartesianCoordinate(Double.valueOf(vertex[1]), Double.valueOf(vertex[2]), Double.valueOf(vertex[3]));
 					vertexCount++;
 				}else if(vertexCount == 2){
-					vertex3 = new CartesianCoordinate(Double.valueOf(vertex[9]), Double.valueOf(vertex[10]), Double.valueOf(vertex[11]));
+					vertex3 = new CartesianCoordinate(Double.valueOf(vertex[1]), Double.valueOf(vertex[2]), Double.valueOf(vertex[3]));
 					vertexCount++;
 				}
 			}
