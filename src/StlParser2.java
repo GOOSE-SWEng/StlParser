@@ -7,8 +7,7 @@ import java.util.ArrayList;
 
 public class StlParser2 {
 	
-	
-	public File cube = new File("src/space_invader_magnet.stl");
+	public File cube = new File("src/toothed_pulley.stl");
 	public ArrayList<Facet> facets =  new ArrayList<>();
 	public int facetCount = 0;
 	public int vertexCount = 0;
@@ -21,6 +20,7 @@ public class StlParser2 {
 		System.out.println("Parser Finished...");
 		printFacets();
 		System.out.println("DONE");
+		//LOL THIS IS AN STL PARSER LMAO
 		
 	}
 	
