@@ -6,74 +6,68 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class StlParser2 {
-	
-	public File cube = new File("src/toothed_pulley.stl");
-	public ArrayList<Facet> facets =  new ArrayList<>();
-	public int facetCount = 0;
-	public int vertexCount = 0;
-	BufferedReader br;
+	//Choose ASCII stl to parse
+	public File model = new File("src/toothed_pulley.stl");
+	public ArrayList<Facet> facets =  new ArrayList<>(); //Arraylist to store all facets of the model
+	public int facetCount = 0;	//Facet counter to keep track of how many facets in a model
+	public int vertexCount = 0;	//Vertex counter to keep track of how many vertices have been stored per facet
+	BufferedReader br;	//The type of reader used to scan the file
 	
 	public StlParser2() throws IOException {
 		System.out.println("Parser Running...");
-		StlParse(cube);
-		System.out.println("No. of facets: " + facets.size());
+		StlParse(model); //Begin parsing of the model
+		System.out.println("No. of facets: " + facets.size()); //Print total amount of facets stored in array
 		System.out.println("Parser Finished...");
-		printFacets();
+		printFacets(); //Print all facets and their vertices
 		System.out.println("DONE");
-		//LOL THIS IS AN STL PARSER LMAO
-		
 	}
 	
 	public void StlParse(File file) throws IOException {
 		try{
-			br = new BufferedReader(new FileReader(cube));
+			br = new BufferedReader(new FileReader(model));
 		}catch(FileNotFoundException e) {
 			System.out.println("File not found...");
 		}
 		
 		String line = "";
-		line = br.readLine();
+		line = br.readLine(); //Stores lines of file in line string
+		//Initialise the global coords
 		CartesianCoordinate facetNormal = null;
 		CartesianCoordinate vertex1 = null;
 		CartesianCoordinate vertex2 = null;
 		CartesianCoordinate vertex3 = null;
 		
+		//Loop until the end of the file is reached
 		while(line !=  null) {
-			if(line.contains("facet normal")) {
+			if(line.contains("facet normal")) { //If facet coords are found
 				facetCount++;
-				String[] normal = line.trim().split("\\s+");
-				//System.out.println("NORMALS: " + normal[4] + "," + normal[5] + "," + normal[6]);
-
+				String[] normal = line.trim().split("\\s+"); //Split stored line into an array of words, also removes whitespace infront and behind string
+				//Store and parse the numeric values from the array of strings
 				facetNormal = new CartesianCoordinate(Double.valueOf(normal[2]),Double.valueOf(normal[3]) , Double.valueOf(normal[4]));
-				//System.out.println("FACET NORMAL STORED");
-
-				
-			} else if(line.contains("vertex")) {
+			} else if(line.contains("vertex")) { //If vertex is found in stored line
 				String[] vertex = line.trim().split("\\s+");
-
-				if(vertexCount == 0) {
+				if(vertexCount == 0) { //If no vertices have been stored
 					vertex1 = new CartesianCoordinate(Double.valueOf(vertex[1]), Double.valueOf(vertex[2]), Double.valueOf(vertex[3]));
 					vertexCount++;
-				}else if(vertexCount == 1) {
+				}else if(vertexCount == 1) { //If only 1 vertex has been stored
 					vertex2 = new CartesianCoordinate(Double.valueOf(vertex[1]), Double.valueOf(vertex[2]), Double.valueOf(vertex[3]));
 					vertexCount++;
-				}else if(vertexCount == 2){
+				}else if(vertexCount == 2){ //If 2 vertices have been stored
 					vertex3 = new CartesianCoordinate(Double.valueOf(vertex[1]), Double.valueOf(vertex[2]), Double.valueOf(vertex[3]));
 					vertexCount++;
 				}
 			}
 			
-			if(vertexCount == 3) {
-				facets.add(new Facet(facetNormal, vertex1, vertex2, vertex3));
-				vertexCount = 0;
-				//System.out.println("Facet Added, No." + facetCount);
+			if(vertexCount == 3) { //If all vertices have been stored
+				facets.add(new Facet(facetNormal, vertex1, vertex2, vertex3)); //Create facet with these values and add to facet array
+				vertexCount = 0; //Reset the vertex counter
 			}
-			//Utils.pause(100);
-			line = br.readLine();
-			//System.out.println(line);
+			line = br.readLine(); //Stores next line in string
 		}
 	}
 	
+	//USED FOR DEBUGGING
+	//PRINTS ALL FACETS AND THEIR COORDS
 	public void printFacets() {
 		for(int i = 0; i< facets.size();i++) {
 			System.out.println("FACET NO." + i);
@@ -85,8 +79,6 @@ public class StlParser2 {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		new StlParser2();
-
+		new StlParser2(); //Create new StlParser object and run the parser
 	}
-
 }
